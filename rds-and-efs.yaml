@@ -1,0 +1,75 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "RDS and EFS for the PPRO DevOps challenge"
+Resources:
+    rdsb8599b9:
+        Type: "AWS::RDS::DBSubnetGroup"
+        Properties:
+            DBSubnetGroupDescription: "Created from the RDS Management Console"
+            DBSubnetGroupName: "default-vpc-0ed5864aa62b041c4"
+            SubnetIds: 
+              - "subnet-0bd9a3c90a96e4ab9"
+              - "subnet-08081890c677fbc1d"
+              - "subnet-021ee39bddcd96fb2"
+              - "subnet-0178e9e2c8db485cd"
+              - "subnet-0ce3247fc65b24afb"
+              - "subnet-08277b4c4db7f807b"
+
+    rdsa8ef197:
+        Type: "AWS::RDS::DBInstance"
+        Properties:
+            AutoMinorVersionUpgrade: true
+            CopyTagsToSnapshot: true
+            MultiAZ: false
+            PubliclyAccessible: false
+            StorageEncrypted: false
+            AllocatedStorage: 20
+            BackupRetentionPeriod: 7
+            Iops: 0
+            MonitoringInterval: 60
+            Port: 3306
+            DBInstanceClass: "db.m4.large"
+            DBInstanceIdentifier: "wordpress-db"
+            DBName: "wordpress"
+            DBParameterGroupName: "default.mysql5.7"
+            DBSubnetGroupName: "default-vpc-0ed5864aa62b041c4"
+            Engine: "mysql"
+            EngineVersion: "5.7.22"
+            LicenseModel: "general-public-license"
+            MasterUserPassword: "rootpasswd"
+            MasterUsername: "rootuser"
+            MonitoringRoleArn: "arn:aws:iam::313368690603:role/rds-monitoring-role"
+            OptionGroupName: "default:mysql-5-7"
+            StorageType: "GP2"
+
+    efscfe912f:
+        Type: "AWS::EFS::FileSystem"
+        Properties:
+            PerformanceMode: "generalPurpose"
+            Encrypted: false
+            ThroughputMode: "bursting"
+
+    efsaaebdb8:
+        Type: "AWS::EFS::MountTarget"
+        Properties:
+            FileSystemId: "fs-1782b6df"
+            SubnetId: "subnet-08081890c677fbc1d"
+            SecurityGroups: 
+              - "sg-022b1d8dee72d2650"
+
+    efs85e5526:
+        Type: "AWS::EFS::MountTarget"
+        Properties:
+            FileSystemId: "fs-1782b6df"
+            SubnetId: "subnet-08277b4c4db7f807b"
+            SecurityGroups: 
+              - "sg-022b1d8dee72d2650"
+
+    efsf0f800c:
+        Type: "AWS::EFS::MountTarget"
+        Properties:
+            FileSystemId: "fs-1782b6df"
+            SubnetId: "subnet-0178e9e2c8db485cd"
+            SecurityGroups: 
+              - "sg-022b1d8dee72d2650"
+
+
