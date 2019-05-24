@@ -5,7 +5,7 @@ metadata:
   labels:
     app: wordpress
 spec:
-  replicas: 4
+  replicas: 1
   selector:
     matchLabels:
       app: wordpress
@@ -19,6 +19,13 @@ spec:
         image: 313368690603.dkr.ecr.eu-west-1.amazonaws.com/wordpress:2
         ports:
         - containerPort: 80
+        volumeMounts: 
+          - name: efs-share
+            mountPath: "/var/www/html/wp_uploads"
+      volumes:
+        - name: efs-share
+          persistentVolumeClaim:
+            claimName: efs
 
 ---
 
