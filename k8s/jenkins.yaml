@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkins-deployment
+  labels:
+    app: jenkins
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jenkins
+  template:
+    metadata:
+      labels:
+        app: jenkins
+    spec:
+      containers:
+      - name: jenkins
+        image: 313368690603.dkr.ecr.eu-west-1.amazonaws.com/jenkins:2
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+          - name: shared-home
+            mountPath: "/var/jenkins_home"
+      volumes:
+        - name: shared-home
+          persistentVolumeClaim:
+            claimName: efs-jenkins
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: jenkins-elb
+spec:
+  selector:
+    app: jenkins
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+  type: LoadBalancer
