@@ -16,16 +16,22 @@ spec:
     spec:
       containers:
       - name: jenkins
-        image: 313368690603.dkr.ecr.eu-west-1.amazonaws.com/jenkins:2
+        image: 313368690603.dkr.ecr.eu-west-1.amazonaws.com/jenkins:3
         ports:
         - containerPort: 8080
         volumeMounts:
           - name: shared-home
             mountPath: "/var/jenkins_home"
+          - name: docker-sock-volume
+            mountPath: "/var/run/docker.sock"
       volumes:
         - name: shared-home
           persistentVolumeClaim:
             claimName: efs-jenkins
+        - name: docker-sock-volume
+          hostPath:
+            path: /var/run/docker.sock
+            type: File
 
 ---
 
