@@ -2,26 +2,22 @@
 
 ## Build instructions
 
-Current build process consists on building new Docker images using the provided Dockerfiles provided in the `container-definitions` folder using
+The Wordpress container is built and deployed by a Jenkins job. Building instructions are on the `build-steps.sh` file, which is used by the deployment process.
 
-`docker build ./container-definitions/$CONTAINERNAME`
+To build and deploy the image, access to ECR and to the EKS cluster is needed.
 
-And then tagging and pushing the new builds to ECR:
+The Jenkins container is set up with that access, and also has the following capabilities:
 
-`sudo docker tag 836a8b4633e9 313368690603.dkr.ecr.eu-west-1.amazonaws.com/$IMAGE_NAME:$TAG`
-`sudo docker push 313368690603.dkr.ecr.eu-west-1.amazonaws.com/$IMAGE_NAME` 
+* Access to the host's `docker.sock` to build the images and push them to ECR
+* Access to `kubectl` and `aws-iam-authenticator` to interact with the cluster control plane
 
-Then, tag numbers have to be incremented on the service YAML files.
+The EKS cluster was created using `eksctl`
 
-### Deploy instructions
+`eksctl create cluster --name ppro --version 1.12 --nodegroup-name standard-workers --node-type t3.medium --nodes 1 --nodes-min 1 --nodes-max 4 --node-ami auto`
 
-Deployment will be done by running
+There is a CloudFormation template named `rds-and-efs.yaml` that can create the underlying RDS and EFS needed for WordPress. I am using the same EFS for Jenkins as the persistent storage as well.
 
-`kubectl apply -f`
-
-on all the files in the `k8s` folder.
-
-Rollback will be executed by getting the previous revision from `kubectl rollout history deployment`
+Additional cluster configuration and Kubernetes deployment manifests are in the k8s/ folder.
 
 ### Useful commands
 

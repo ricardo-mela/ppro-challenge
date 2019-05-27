@@ -55,6 +55,7 @@ Resources:
             SubnetId: "subnet-08081890c677fbc1d"
             SecurityGroups: 
               - "sg-022b1d8dee72d2650"
+              - "sg-0642cb5df5d677376"
 
     efs85e5526:
         Type: "AWS::EFS::MountTarget"
@@ -63,6 +64,7 @@ Resources:
             SubnetId: "subnet-08277b4c4db7f807b"
             SecurityGroups: 
               - "sg-022b1d8dee72d2650"
+              - "sg-0642cb5df5d677376"
 
     efsf0f800c:
         Type: "AWS::EFS::MountTarget"
@@ -71,5 +73,6 @@ Resources:
             SubnetId: "subnet-0178e9e2c8db485cd"
             SecurityGroups: 
               - "sg-022b1d8dee72d2650"
+              - "sg-0642cb5df5d677376"
 
 
